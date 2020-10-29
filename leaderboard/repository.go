@@ -6,7 +6,7 @@ import (
 
 // Repository holds interface for leaderboard functions
 type Repository interface {
-	RankMember(ctx context.Context, username string, score int) (User, error)
-	GetMember(ctx context.Context, username string) (User, error)
+	RankMember(ctx context.Context, username string, score int64) (*User, error)
+	GetMember(ctx context.Context, username string) (*User, error)
 	TotalMembers(ctx context.Context) (int, error)
 }
