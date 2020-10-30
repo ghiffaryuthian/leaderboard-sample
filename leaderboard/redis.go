@@ -2,8 +2,6 @@ package leaderboard
 
 import (
 	"context"
-	"errors"
-	"fmt"
 
 	redis "github.com/go-redis/redis/v8"
 )
@@ -26,12 +24,9 @@ func NewRedisRepo(redis *redis.Client, name string, pageSize int) Repository {
 // RankMember will store a new member score into the leaderboard
 func (r *redisRepo) RankMember(ctx context.Context, username string, score float64) (*User, error) {
 	var user User
-	if val := r.Redis.ZAdd(ctx, r.Name, &redis.Z{Score: score, Member: username}); val == nil {
-		msg := fmt.Sprintf("Failed to insert member %s with score %f to %s", username, score, r.Name)
-		err := errors.New(msg)
-		return &user, err
-	}
-	return &user, nil
+	_, err := r.Redis.ZAdd(ctx, r.Name, &redis.Z{Score: score, Member: username}).Result()
+
+	return &user, err
 }
 
 // GetMember will fetch member's details given username
