@@ -44,6 +44,8 @@ func (r *redisRepo) GetUserScore(ctx context.Context, username string) (float64,
 	return float64(score), err
 }
 
-func (r *redisRepo) TotalMembers(ctx context.Context) (int, error) {
-	return 0, nil
+func (r *redisRepo) TotalMembers(ctx context.Context) (int64, error) {
+	memberCount, err := r.Redis.ZCount(ctx, r.Name, "-inf", "+inf").Result()
+
+	return memberCount, err
 }

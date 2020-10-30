@@ -27,7 +27,8 @@ func main() {
 
 	rank, _ := leaderboardRepo.GetUserRank(context.TODO(), "pepega")
 	score, _ := leaderboardRepo.GetUserScore(context.TODO(), "pepega")
-	fmt.Printf("pepega rank:%d | score:%.0f\n", rank, score)
+	memberCount, _ := leaderboardRepo.TotalMembers(context.TODO())
+	fmt.Printf("pepega rank:%d | score:%.0f\nmember count:%d", rank, score, memberCount)
 
 	r := gin.Default()
 	r.GET("/health", func(c *gin.Context) {
