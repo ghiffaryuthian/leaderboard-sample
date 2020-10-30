@@ -7,7 +7,7 @@ require (
 	github.com/garyburd/redigo v1.6.2 // indirect
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-delve/delve v1.5.0 // indirect
-	github.com/go-redis/redis/v8 v8.3.3 // indirect
+	github.com/go-redis/redis/v8 v8.3.3
 	github.com/google/go-dap v0.3.0 // indirect
 	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/mattn/go-runewidth v0.0.9 // indirect

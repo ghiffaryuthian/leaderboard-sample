@@ -1,26 +1,31 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
-	lb "github.com/dayvson/go-leaderboard"
 	"github.com/ghiffaryuthian/leaderboard-sample/config"
+	"github.com/ghiffaryuthian/leaderboard-sample/leaderboard"
 	"github.com/gin-gonic/gin"
+	redis "github.com/go-redis/redis/v8"
 )
 
 func main() {
 	cfg := config.NewConfig()
 
-	leaderboard := lb.NewLeaderboard(lb.RedisSettings{
-		Host:     cfg.GetString("REDIS_ADDR"),
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     cfg.GetString("REDIS_ADDR"),
 		Password: cfg.GetString("REDIS_PASSWORD"),
-	}, "leaderboard", 10)
+		DB:       cfg.GetInt("REDIS_DB"),
+	})
 
-	if _, err := leaderboard.RankMember("pepega", 69); err != nil {
+	leaderboardRepo := leaderboard.NewRedisRepo(rdb, "leaderboard", 10)
+
+	if _, err := leaderboardRepo.RankMember(context.TODO(), "andi", 8869); err != nil {
 		panic(err)
 	}
 
-	fmt.Println(leaderboard.TotalMembers())
+	fmt.Println(leaderboardRepo.TotalMembers(context.TODO()))
 
 	r := gin.Default()
 	r.GET("/health", func(c *gin.Context) {
