@@ -21,18 +21,20 @@ func NewRedisRepo(redis *redis.Client, name string, pageSize int) Repository {
 	}
 }
 
-// RankMember will store a new member score into the leaderboard
-func (r *redisRepo) RankMember(ctx context.Context, username string, score float64) (*User, error) {
+// InsertUserScore will store a new member score into the leaderboard
+func (r *redisRepo) InsertUserScore(ctx context.Context, username string, score float64) (*User, error) {
 	var user User
+
 	_, err := r.Redis.ZAdd(ctx, r.Name, &redis.Z{Score: score, Member: username}).Result()
 
 	return &user, err
 }
 
-// GetMember will fetch member's details given username
-func (r *redisRepo) GetMember(ctx context.Context, username string) (*User, error) {
-	var user User
-	return &user, nil
+// GetUserScore will fetch member's details given username
+func (r *redisRepo) GetUserRank(ctx context.Context, username string) (float64, error) {
+	rankscore, err := r.Redis.ZRevRank(ctx, r.Name, username).Result()
+
+	return float64(rankscore), err
 }
 
 func (r *redisRepo) TotalMembers(ctx context.Context) (int, error) {

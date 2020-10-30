@@ -21,11 +21,12 @@ func main() {
 
 	leaderboardRepo := leaderboard.NewRedisRepo(rdb, "leaderboard", 10)
 
-	if _, err := leaderboardRepo.RankMember(context.TODO(), "andi", 8869); err != nil {
+	if _, err := leaderboardRepo.InsertUserScore(context.TODO(), "chara", 7); err != nil {
 		panic(err)
 	}
 
-	fmt.Println(leaderboardRepo.TotalMembers(context.TODO()))
+	res, _ := leaderboardRepo.GetUserRank(context.TODO(), "pepega")
+	fmt.Printf("pepega score : %f\n", res)
 
 	r := gin.Default()
 	r.GET("/health", func(c *gin.Context) {
