@@ -21,14 +21,14 @@ func NewRedisRepo(redis *redis.Client, name string, pageSize int) Repository {
 	}
 }
 
-// InsertUserScore will store a new member score into the leaderboard
+// InsertUserScore stores a new member score into the leaderboard
 func (r *redisRepo) InsertUserScore(ctx context.Context, username string, score float64) error {
 	_, err := r.Redis.ZAdd(ctx, r.Name, &redis.Z{Score: score, Member: username}).Result()
 
 	return err
 }
 
-// GetUserRank will fetch member's details given username
+// GetUserRank fetchs member's rank given username
 func (r *redisRepo) GetUserRank(ctx context.Context, username string) (int64, error) {
 	rank, err := r.Redis.ZRevRank(ctx, r.Name, username).Result()
 	// convert 0-base to 1-base
@@ -37,13 +37,17 @@ func (r *redisRepo) GetUserRank(ctx context.Context, username string) (int64, er
 	return rank, err
 }
 
-// GetUserScore will fetch member's details given username
+// GetUserScore fetchs member's score given username
 func (r *redisRepo) GetUserScore(ctx context.Context, username string) (float64, error) {
 	score, err := r.Redis.ZScore(ctx, r.Name, username).Result()
+	if err == redis.Nil {
+		return score, nil
+	}
 
-	return float64(score), err
+	return score, err
 }
 
+// TotalMembers give the count of all unique user on leaderboard
 func (r *redisRepo) TotalMembers(ctx context.Context) (int64, error) {
 	memberCount, err := r.Redis.ZCount(ctx, r.Name, "-inf", "+inf").Result()
 

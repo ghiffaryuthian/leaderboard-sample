@@ -19,16 +19,19 @@ func main() {
 		DB:       cfg.GetInt("REDIS_DB"),
 	})
 
-	leaderboardRepo := leaderboard.NewRedisRepo(rdb, "leaderboard", 10)
+	lbRepo := leaderboard.NewRedisRepo(rdb, "leaderboard", 10)
+	lbService := leaderboard.NewService(lbRepo)
 
-	if err := leaderboardRepo.InsertUserScore(context.TODO(), "chara", 7); err != nil {
+	userDetail, err := lbService.RankMember(context.TODO(), "ayaya", 969696)
+	if err != nil {
 		panic(err)
 	}
+	fmt.Printf("inserted %s rank:%d | score:%.0f\n", userDetail.Name, userDetail.Rank, userDetail.Score)
 
-	rank, _ := leaderboardRepo.GetUserRank(context.TODO(), "pepega")
-	score, _ := leaderboardRepo.GetUserScore(context.TODO(), "pepega")
-	memberCount, _ := leaderboardRepo.TotalMembers(context.TODO())
-	fmt.Printf("pepega rank:%d | score:%.0f\nmember count:%d", rank, score, memberCount)
+	rank, _ := lbRepo.GetUserRank(context.TODO(), "ayaya")
+	score, _ := lbRepo.GetUserScore(context.TODO(), "ayaya")
+	memberCount, _ := lbRepo.TotalMembers(context.TODO())
+	fmt.Printf("ayaya rank:%d | score:%.0f\nmember count:%d", rank, score, memberCount)
 
 	r := gin.Default()
 	r.GET("/health", func(c *gin.Context) {
