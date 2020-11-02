@@ -28,7 +28,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("inserted %s rank:%d | score:%.0f\n", userDetail.Name, userDetail.Rank, userDetail.Score)
+	fmt.Printf("inserted %s rank:%d | score:%.0f\n", userDetail.Username, userDetail.Rank, userDetail.Score)
 
 	rank, _ := lbRepo.GetUserRank(context.TODO(), "ayaya")
 	score, _ := lbRepo.GetUserScore(context.TODO(), "ayaya")

@@ -7,7 +7,7 @@ import (
 // Service is interface for leaderboard business logic
 type Service interface {
 	RankMember(ctx context.Context, username string, score float64) (*User, error)
-	GetMemberDetails(ctx context.Context, username string) *User
+	GetMemberDetails(ctx context.Context, username string) (*User, error)
 }
 
 type service struct {
@@ -38,16 +38,29 @@ func (s *service) RankMember(ctx context.Context, username string, score float64
 	if err != nil {
 		return nil, err
 	}
-	return &User{Name: username, Rank: rank, Score: score}, err
+
+	user := &User{
+		Username: username,
+		Rank:     rank,
+		Score:    score,
+	}
+	return user, err
 }
 
 //GetMemberDetails returns member details
-func (s *service) GetMemberDetails(ctx context.Context, username string) *User {
-	rank, _ := s.repo.GetUserRank(context.TODO(), username)
-	score, _ := s.repo.GetUserScore(context.TODO(), username)
-	return &User{
-		Name:  username,
-		Score: score,
-		Rank:  rank,
+func (s *service) GetMemberDetails(ctx context.Context, username string) (*User, error) {
+	rank, err := s.repo.GetUserRank(context.TODO(), username)
+	if err != nil {
+		return nil, err
 	}
+	score, err := s.repo.GetUserScore(context.TODO(), username)
+	if err != nil {
+		return nil, err
+	}
+	user := &User{
+		Username: username,
+		Rank:     rank,
+		Score:    score,
+	}
+	return user, err
 }
