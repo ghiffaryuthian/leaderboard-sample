@@ -9,6 +9,7 @@ require (
 	github.com/go-delve/delve v1.5.0 // indirect
 	github.com/go-redis/redis/v8 v8.3.3
 	github.com/google/go-dap v0.3.0 // indirect
+	github.com/labstack/echo/v4 v4.1.17
 	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/mattn/go-runewidth v0.0.9 // indirect
 	github.com/peterh/liner v1.2.0 // indirect

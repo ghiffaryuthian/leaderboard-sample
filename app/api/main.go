@@ -5,9 +5,11 @@ import (
 	"fmt"
 
 	"github.com/ghiffaryuthian/leaderboard-sample/config"
+	"github.com/ghiffaryuthian/leaderboard-sample/handler"
 	"github.com/ghiffaryuthian/leaderboard-sample/leaderboard"
-	"github.com/gin-gonic/gin"
 	redis "github.com/go-redis/redis/v8"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
@@ -33,11 +35,13 @@ func main() {
 	memberCount, _ := lbRepo.TotalMembers(context.TODO())
 	fmt.Printf("ayaya rank:%d | score:%.0f\nmember count:%d", rank, score, memberCount)
 
-	r := gin.Default()
-	r.GET("/health", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "OK",
-		})
-	})
-	r.Run()
+	e := echo.New()
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+
+	handler.MakeLeaderboardHandler(e, lbRepo)
+	handler.MakeMiscHandler(e)
+
+	e.Logger.Fatal(e.Start(":1234"))
+
 }
