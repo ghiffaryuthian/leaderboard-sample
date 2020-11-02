@@ -1,10 +1,13 @@
 package leaderboard
 
-import "context"
+import (
+	"context"
+)
 
 // Service is interface for leaderboard business logic
 type Service interface {
 	RankMember(ctx context.Context, username string, score float64) (*User, error)
+	GetMemberDetails(ctx context.Context, username string) *User
 }
 
 type service struct {
@@ -36,4 +39,15 @@ func (s *service) RankMember(ctx context.Context, username string, score float64
 		return nil, err
 	}
 	return &User{Name: username, Rank: rank, Score: score}, err
+}
+
+//GetMemberDetails returns member details
+func (s *service) GetMemberDetails(ctx context.Context, username string) *User {
+	rank, _ := s.repo.GetUserRank(context.TODO(), username)
+	score, _ := s.repo.GetUserScore(context.TODO(), username)
+	return &User{
+		Name:  username,
+		Score: score,
+		Rank:  rank,
+	}
 }

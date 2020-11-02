@@ -39,7 +39,7 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	handler.MakeLeaderboardHandler(e, lbRepo)
+	handler.MakeLeaderboardHandler(e, lbService)
 	handler.MakeMiscHandler(e)
 
 	e.Logger.Fatal(e.Start(":1234"))
