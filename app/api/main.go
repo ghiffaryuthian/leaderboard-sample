@@ -1,9 +1,6 @@
 package main
 
 import (
-	"context"
-	"fmt"
-
 	"github.com/ghiffaryuthian/leaderboard-sample/config"
 	"github.com/ghiffaryuthian/leaderboard-sample/handler"
 	"github.com/ghiffaryuthian/leaderboard-sample/leaderboard"
@@ -24,16 +21,16 @@ func main() {
 	lbRepo := leaderboard.NewRedisRepo(rdb, "leaderboard", 10)
 	lbService := leaderboard.NewService(lbRepo)
 
-	userDetail, err := lbService.RankMember(context.TODO(), "ayaya", 969696)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("inserted %s rank:%d | score:%.0f\n", userDetail.Username, userDetail.Rank, userDetail.Score)
+	// userDetail, err := lbService.RankMember(context.TODO(), "ayaya", 969696)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Printf("inserted %s rank:%d | score:%.0f\n", userDetail.Username, userDetail.Rank, userDetail.Score)
 
-	rank, _ := lbRepo.GetUserRank(context.TODO(), "ayaya")
-	score, _ := lbRepo.GetUserScore(context.TODO(), "ayaya")
-	memberCount, _ := lbRepo.TotalMembers(context.TODO())
-	fmt.Printf("ayaya rank:%d | score:%.0f\nmember count:%d", rank, score, memberCount)
+	// rank, _ := lbRepo.GetUserRank(context.TODO(), "ayaya")
+	// score, _ := lbRepo.GetUserScore(context.TODO(), "ayaya")
+	// memberCount, _ := lbRepo.TotalMembers(context.TODO())
+	// fmt.Printf("ayaya rank:%d | score:%.0f\nmember count:%d", rank, score, memberCount)
 
 	e := echo.New()
 	e.Use(middleware.Logger())
